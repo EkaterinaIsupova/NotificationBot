@@ -34,9 +34,9 @@ def handle_start(message):
     # Получаем username пользователя в виде строки, если он есть
     user_username = message.from_user.username
     welcome_text = "Добро пожаловать в нашего бота!"
-
     if user_username:
         welcome_text += f" Ваш телеграм тег: @{user_username}."
+        save_user('@' + user_username, message.chat.id)
         if user_username in admins or '@' + user_username in admins:
             welcome_text += " Вы являетесь администратором этого бота."
         else:
@@ -74,13 +74,13 @@ def list_events_for_user(message):
 # Словарь для управления состояниями пользователей и их данными
 user_data = {}
 
+
 # Получение текущего состояния пользователя
 def get_user_step(user_tag):
     if user_tag in user_data:
         return user_data[user_tag]['step']
     else:
-        return "AWAITING_COMMAND"
-
+        return "AWAITING_COMMANDS"
 
 
 # Команда для начала создания или редактирования события
@@ -113,9 +113,20 @@ def handle_document(message):
 def event_name_received(message):
     user_tag = message.from_user.username
     event_name = message.text
-    #TODO Проверка на уникальность названия и редактирование события, РАБОТА С БД
-    user_data[user_tag]['event_name'] = event_name
+    save_event(event_name, format_excel_file(user_data[user_tag]['file_id']))
     user_data[user_tag]['step'] = "AWAITING_COMMANDS"
     bot.send_message(message.chat.id, f"Событие '{event_name}' создано/отредактировано. Используйте команды для управления событием.")
+
+
+@bot.message_handler(commands=['listall'])
+@admin_required
+def listall(message):
+    username = '@' + message.from_user.username
+    info = get_events_info(username)
+    if info is None:
+        bot.send_message(message.chat.id, 'В данный момент вы не создали ни одного события')
+    else:
+        bot.send_message(message.chat.id, info)
+
 
 

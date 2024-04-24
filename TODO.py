@@ -1,10 +1,10 @@
-def format_excel_file(file_id, event_name):
+def format_excel_file(file_id):
     # Заглушка для функции обработки файла
     # Сюда будет вставлена реальная функция обработки файла
     pass
 
 
-def get_event_list_for_user(user_tag):
+def get_event_list_for_user(user_tag) -> dict | None:
     # Заглушка для функции, которая должна быть реализована для работы с базой данных
     # Возвращаем тестовые данные
     return {
@@ -16,6 +16,35 @@ def get_event_list_for_user(user_tag):
             'дедлайн3': '2024-06-01 12:00'
         }
     }
+
+
+def save_user(username, chat_id):
+    # сохранение соответствия между тегом пользователя и номером чата для будущих рассылок.
+    # сохранение происходит когда пользователь первый раз пишет /start боту
+    return
+
+
+def save_event(event_name, parsed_file_data):
+    #сохраняем в БД полную информацию о событии, включая получателей
+    return
+
+
+def get_events_info(username) -> str | None:
+    #вернуть информацию о всех ивентах созданных пользователем (команда listme)
+    return None
+
+
+def get_notification_receivers() -> dict | None:
+    # Заглушка, возвращающая список ближайших уведомлений которые уже пора отправлять
+    return {
+        '@user71424': 'скоро дедлайн "отправка теста 1", осталось 30 минут',
+        '@user2': 'скоро дедлайн "подготовка отчета", осталось 45 минут'
+    }
+
+
+def get_chat_id(tg_tag) -> int | None:
+    # получаем чат id по тегу
+    return None
 
 # Предполагаем, что функции для взаимодействия с базой данных уже существуют
 def add_participants(event_name, user_tags):
